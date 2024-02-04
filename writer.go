@@ -25,6 +25,8 @@ func newMultiWriter[T io.Writer](w ...T) io.Writer {
 	return &multiWriter{w: writers}
 }
 
+// Write will simply write data to the different writers one by one in sequence.
+// use ReadFrom to have something that will be more optimized
 func (mw *multiWriter) Write(b []byte) (int, error) {
 	l := len(b)
 	for _, w := range mw.w {
@@ -39,6 +41,13 @@ func (mw *multiWriter) Write(b []byte) (int, error) {
 	return l, nil
 }
 
+// ReadFrom will spawn one goroutine for each writer and perform some dark magic
+// to parallelize writes to all the available writers.
+//
+// Ye who dareth approach this enigmatic conjuration, be warned:
+// Herein lies complexity so vast and tangled, it doth threaten
+// the very fabric of thy sanity. Proceed with caution, brave soul,
+// lest ye wish to entangle thyself in its inexorable depths.
 func (mw *multiWriter) ReadFrom(r io.Reader) (written int64, err error) {
 	buf := make([]byte, 8192)
 	var wbuf []byte // protected by s
