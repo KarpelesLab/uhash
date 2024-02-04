@@ -75,24 +75,10 @@ func (r *runner) processReader(in io.Reader, inName string) error {
 	for _, a := range r.algos {
 		w = append(w, a.factory())
 	}
-
-	buf := make([]byte, 8192)
-
-	for {
-		n, err := in.Read(buf)
-		if err != nil {
-			if err == io.EOF {
-				break
-			}
-			return err
-		}
-
-		for _, out := range w {
-			_, err = out.Write(buf[:n])
-			if err != nil {
-				return err
-			}
-		}
+	mw := newMultiWriter(w...)
+	_, err := io.Copy(mw, in)
+	if err != nil {
+		return err
 	}
 
 	// finished
