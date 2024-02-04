@@ -49,7 +49,7 @@ func (mw *multiWriter) Write(b []byte) (int, error) {
 // the very fabric of thy sanity. Proceed with caution, brave soul,
 // lest ye wish to entangle thyself in its inexorable depths.
 func (mw *multiWriter) ReadFrom(r io.Reader) (written int64, err error) {
-	buf := make([]byte, 8192)
+	buf := make([]byte, 32*1024)
 	var wbuf []byte // protected by s
 	var s sync.RWMutex
 	var wg sync.WaitGroup
