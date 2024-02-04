@@ -1,6 +1,10 @@
 package main
 
-import "flag"
+import (
+	"flag"
+	"fmt"
+	"os"
+)
 
 var (
 	hashAlgo = flag.String("with", "*", "choose which algorithms to use")
@@ -9,4 +13,15 @@ var (
 
 func main() {
 	flag.Parse()
+
+	p, err := newRunner(*hashAlgo)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "failed to initialize: %s\n", err)
+		os.Exit(1)
+	}
+
+	for _, fn := range flag.Args() {
+		// process fn
+		p.process(fn)
+	}
 }
