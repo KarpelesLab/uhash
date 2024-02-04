@@ -6,4 +6,4 @@ Perform hashes of files, streams, etc in parallel.
 
 Becomes
 
-    echo 'hello world' | uhash -h sha256 -
+    echo 'hello world' | uhash -with sha256 -
