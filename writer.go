@@ -90,16 +90,6 @@ func (mw *multiWriter) ReadFrom(r io.Reader) (written int64, err error) {
 
 	for {
 		nr, er := r.Read(buf)
-		if er != nil {
-			end = true
-			c.Broadcast()
-
-			if er == io.EOF {
-				return
-			}
-			err = er
-			return
-		}
 		if nr > 0 {
 			wbuf = buf[:nr]
 			wg.Add(cnt)
@@ -115,6 +105,16 @@ func (mw *multiWriter) ReadFrom(r io.Reader) (written int64, err error) {
 			}
 
 			written += int64(nr)
+		}
+		if er != nil {
+			end = true
+			c.Broadcast()
+
+			if er == io.EOF {
+				return
+			}
+			err = er
+			return
 		}
 	}
 }
