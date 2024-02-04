@@ -44,6 +44,12 @@ func main() {
 		os.Exit(1)
 	}
 
+	files := flag.Args()
+	if len(files) == 0 {
+		// read from stdin by default
+		files = []string{"-"}
+	}
+
 	for _, fn := range flag.Args() {
 		// process fn
 		p.process(fn)
