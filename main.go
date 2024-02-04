@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"sort"
 )
 
 var (
@@ -13,6 +14,21 @@ var (
 
 func main() {
 	flag.Parse()
+
+	if *listAlgo {
+		// list algos
+		fmt.Fprintf(os.Stderr, "List of supported hashing algorithms:\n")
+		var v []string
+		for k := range algoMap {
+			v = append(v, k)
+		}
+		sort.Strings(v)
+		for _, k := range v {
+			a := algoMap[k]
+			fmt.Fprintf(os.Stderr, "%s: %s\n", a.name, a.desc)
+		}
+		return
+	}
 
 	p, err := newRunner(*hashAlgo)
 	if err != nil {
