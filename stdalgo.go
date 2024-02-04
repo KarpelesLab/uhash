@@ -15,7 +15,7 @@ func init() {
 	reg(&algo{name: "md4", desc: "MD4", factory: md4.New})
 	reg(&algo{name: "md5", desc: "MD5", factory: md5.New})
 	reg(&algo{name: "sha1", desc: "SHA1", factory: sha1.New})
-	reg(&algo{name: "md5-sha1", desc: "MD5-SHA1 MD5+SHA1 used for TLS RSA", factory: newConcatFactory(md5.New, sha1.New)})
+	reg(&algo{name: "md5-sha1", desc: "MD5+SHA1 used for TLS RSA", factory: newConcatFactory(md5.New, sha1.New)})
 	reg(&algo{name: "sha256", desc: "SHA256", factory: sha256.New})
 	reg(&algo{name: "sha224", desc: "SHA224", factory: sha256.New224})
 	reg(&algo{name: "sha384", desc: "SHA384", factory: sha512.New384})

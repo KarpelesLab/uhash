@@ -8,8 +8,9 @@ import (
 )
 
 var (
-	hashAlgo = flag.String("with", "*", "choose which algorithms to use")
-	listAlgo = flag.Bool("list", false, "list all available hash algorithms")
+	hashAlgo     = flag.String("with", "*", "choose which algorithms to use")
+	listAlgo     = flag.Bool("list", false, "list all available hash algorithms")
+	outputFormat = flag.String("format", "openssl", "select output format for result")
 )
 
 func main() {
@@ -30,7 +31,14 @@ func main() {
 		return
 	}
 
-	p, err := newRunner(*hashAlgo)
+	out, err := newOutput(*outputFormat)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "failed to initialize: %s\n", err)
+		os.Exit(1)
+	}
+	defer out.Finalize()
+
+	p, err := newRunner(*hashAlgo, out)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to initialize: %s\n", err)
 		os.Exit(1)

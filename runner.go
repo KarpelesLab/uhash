@@ -13,10 +13,11 @@ import (
 
 type runner struct {
 	algos []*algo
+	out   hashOutput
 }
 
-func newRunner(algos string) (*runner, error) {
-	r := &runner{}
+func newRunner(algos string, out hashOutput) (*runner, error) {
+	r := &runner{out: out}
 
 	if algos == "*" {
 		var v []string
@@ -91,7 +92,7 @@ func (r *runner) processReader(in io.Reader, inName string) error {
 			s = hex.EncodeToString(out.Sum(nil))
 		}
 
-		fmt.Fprintf(os.Stdout, "%s(%s)=%s\n", a.name, inName, s)
+		r.out.Append(inName, a, s)
 	}
 	return nil
 }
