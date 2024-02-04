@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/hex"
 	"fmt"
 	"hash"
 	"io"
@@ -86,15 +85,7 @@ func (r *runner) processReader(in io.Reader, inName string) error {
 
 	// finished
 	for n, a := range r.algos {
-		var s string
-		out := w[n]
-		if ser, ok := out.(fmt.Stringer); ok {
-			s = ser.String()
-		} else {
-			s = hex.EncodeToString(out.Sum(nil))
-		}
-
-		r.out.Append(inName, a, s)
+		r.out.Append(inName, a, w[n])
 	}
 	return nil
 }

@@ -47,3 +47,7 @@ func (sw *sizeWriter) Write(b []byte) (int, error) {
 func (sw *sizeWriter) String() string {
 	return strconv.FormatUint(sw.bytes, 10)
 }
+
+func (sw *sizeWriter) Value() any {
+	return sw.bytes
+}
