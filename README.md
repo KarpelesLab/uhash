@@ -25,6 +25,8 @@ Becomes
 ```
 $ ./uhash -list
 List of supported hashing algorithms:
+blake2b-512: BLAKE2b-512
+blake2s-256: BLAKE2s-256
 keccak256: Keccak-256 (legacy sha3)
 keccak512: Keccak-512 (legacy sha3)
 md4: MD4
