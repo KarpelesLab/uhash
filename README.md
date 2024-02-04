@@ -30,7 +30,7 @@ keccak512: Keccak-512 (legacy sha3)
 md4: MD4
 md5: MD5
 md5-sha1: MD5+SHA1 used for TLS RSA
-ripemd160: RIPEMD160
+ripemd-160: RIPE Message Digest
 sha1: SHA1
 sha224: SHA224
 sha256: SHA256

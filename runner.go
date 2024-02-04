@@ -35,6 +35,8 @@ func newRunner(algos string, out hashOutput) (*runner, error) {
 	for _, k := range a {
 		if obj, ok := algoMap[k]; ok {
 			r.algos = append(r.algos, obj)
+		} else if obj, ok := aliasMap[k]; ok {
+			r.algos = append(r.algos, obj)
 		} else {
 			return nil, fmt.Errorf("unknown hashing algorithm: %s", k)
 		}

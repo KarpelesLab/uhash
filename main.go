@@ -50,7 +50,7 @@ func main() {
 		files = []string{"-"}
 	}
 
-	for _, fn := range flag.Args() {
+	for _, fn := range files {
 		// process fn
 		p.process(fn)
 	}

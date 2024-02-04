@@ -22,7 +22,7 @@ func init() {
 	reg(&algo{name: "sha512", desc: "SHA512", factory: sha512.New})
 	reg(&algo{name: "sha512-224", desc: "SHA512-224", factory: sha512.New512_224})
 	reg(&algo{name: "sha512-256", desc: "SHA512-256", factory: sha512.New512_256})
-	reg(&algo{name: "ripemd160", desc: "RIPEMD160", factory: ripemd160.New})
+	reg(&algo{name: "ripemd-160", alias: []string{"ripemd", "ripemd160"}, desc: "RIPE Message Digest", factory: ripemd160.New})
 	reg(&algo{name: "sha3-224", desc: "SHA3-224", factory: sha3.New224})
 	reg(&algo{name: "sha3-256", desc: "SHA3-256", factory: sha3.New256})
 	reg(&algo{name: "sha3-384", desc: "SHA3-384", factory: sha3.New384})

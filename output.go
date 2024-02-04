@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 )
 
 type hashOutput interface {
@@ -22,6 +23,7 @@ func newOutput(style string) (hashOutput, error) {
 	}
 }
 
+// opensslOutput provides an output similar to openssl dgst (not exactly identical however)
 type opensslOutput struct{}
 
 func (opensslOutput) Append(filename string, hashAlgo *algo, hashValue string) error {
@@ -29,7 +31,7 @@ func (opensslOutput) Append(filename string, hashAlgo *algo, hashValue string) e
 		// openssl writes "stdin" instead of -
 		filename = "stdin"
 	}
-	_, err := fmt.Fprintf(os.Stdout, "%s(%s): %s\n", hashAlgo.name, filename, hashValue)
+	_, err := fmt.Fprintf(os.Stdout, "%s(%s)= %s\n", strings.ToUpper(hashAlgo.name), filename, hashValue)
 	return err
 }
 
