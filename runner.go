@@ -31,7 +31,7 @@ func newRunner(algos string, out hashOutput) (*runner, error) {
 		return r, nil
 	}
 
-	a := strings.Split(algos, ",")
+	a := strings.Split(strings.ToLower(algos), ",")
 	for _, k := range a {
 		if obj, ok := algoMap[k]; ok {
 			r.algos = append(r.algos, obj)
