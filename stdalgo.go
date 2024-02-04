@@ -7,6 +7,8 @@ import (
 	"crypto/sha512"
 	"hash"
 
+	"golang.org/x/crypto/blake2b"
+	"golang.org/x/crypto/blake2s"
 	"golang.org/x/crypto/md4"
 	"golang.org/x/crypto/ripemd160"
 	"golang.org/x/crypto/sha3"
@@ -32,4 +34,16 @@ func init() {
 	reg(&algo{name: "shake256", desc: "SHA3 SHAKE256", factory: func() hash.Hash { return sha3.NewShake256() }})
 	reg(&algo{name: "keccak256", desc: "Keccak-256 (legacy sha3)", factory: sha3.NewLegacyKeccak256})
 	reg(&algo{name: "keccak512", desc: "Keccak-512 (legacy sha3)", factory: sha3.NewLegacyKeccak512})
+	reg(&algo{name: "blake2s-256", alias: []string{"blake2s256"}, desc: "BLAKE2s-256", factory: mustBlake(blake2s.New256)})
+	reg(&algo{name: "blake2b-512", alias: []string{"blake2b512"}, desc: "BLAKE2b-512", factory: mustBlake(blake2b.New512)})
+}
+
+func mustBlake(f func([]byte) (hash.Hash, error)) func() hash.Hash {
+	return func() hash.Hash {
+		v, err := f(nil)
+		if err != nil {
+			panic(err)
+		}
+		return v
+	}
 }
