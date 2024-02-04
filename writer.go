@@ -1,12 +1,23 @@
 package main
 
-import "io"
+import (
+	"io"
+	"sync"
+	"sync/atomic"
+)
 
 type multiWriter struct {
 	w []io.Writer
 }
 
 func newMultiWriter[T io.Writer](w ...T) io.Writer {
+	switch len(w) {
+	case 0:
+		return io.Discard
+	case 1:
+		return w[0]
+	}
+
 	writers := make([]io.Writer, len(w))
 	for x, y := range w {
 		writers[x] = y
@@ -26,4 +37,73 @@ func (mw *multiWriter) Write(b []byte) (int, error) {
 		}
 	}
 	return l, nil
+}
+
+func (mw *multiWriter) ReadFrom(r io.Reader) (written int64, err error) {
+	buf := make([]byte, 8192)
+	var wbuf []byte // protected by s
+	var s sync.RWMutex
+	var wg sync.WaitGroup
+	var errCnt uint32
+	var errLk sync.Mutex
+	var end bool
+	c := sync.NewCond(s.RLocker())
+	s.Lock()
+	defer s.Unlock()
+	cnt := len(mw.w)
+
+	for _, wr := range mw.w {
+		go func(w io.Writer) {
+			s.RLock()
+			defer s.RUnlock()
+			for {
+				if len(wbuf) > 0 {
+					wg.Done()
+					n, er := w.Write(wbuf)
+					if er == nil && n != len(wbuf) {
+						er = io.ErrShortWrite
+					}
+					if er != nil {
+						errLk.Lock()
+						defer errLk.Unlock()
+						err = er
+						atomic.AddUint32(&errCnt, 1)
+						return
+					}
+				}
+				c.Wait()
+				if end {
+					return
+				}
+			}
+		}(wr)
+	}
+
+	for {
+		nr, er := r.Read(buf)
+		if er != nil {
+			end = true
+			c.Broadcast()
+
+			if er == io.EOF {
+				return
+			}
+			err = er
+			return
+		}
+		if nr > 0 {
+			wbuf = buf[:nr]
+			wg.Add(cnt)
+			c.Broadcast()
+			s.Unlock()
+			wg.Wait()
+			s.Lock()
+
+			if errCnt > 0 {
+				return
+			}
+
+			written += int64(nr)
+		}
+	}
 }
