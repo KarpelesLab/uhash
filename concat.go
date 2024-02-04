@@ -2,6 +2,10 @@ package main
 
 import "hash"
 
+// concatHash is a hash.Hash that simply performs different types of hashes at the
+// same time and returns a hash that is the concatenation of all those hashes. This
+// is used by the TLS RSA algo MD5+SHA1, and probably nowhere else, but at least
+// here is a generic implementation of it.
 type concatHash struct {
 	algos []hash.Hash
 }
