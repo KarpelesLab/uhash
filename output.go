@@ -25,6 +25,10 @@ func newOutput(style string) (hashOutput, error) {
 type opensslOutput struct{}
 
 func (opensslOutput) Append(filename string, hashAlgo *algo, hashValue string) error {
+	if filename == "-" {
+		// openssl writes "stdin" instead of -
+		filename = "stdin"
+	}
 	_, err := fmt.Fprintf(os.Stdout, "%s(%s): %s\n", hashAlgo.name, filename, hashValue)
 	return err
 }

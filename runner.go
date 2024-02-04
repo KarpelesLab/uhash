@@ -45,7 +45,7 @@ func newRunner(algos string, out hashOutput) (*runner, error) {
 
 func (r *runner) process(fn string) error {
 	if fn == "-" {
-		return r.processReader(os.Stdin, "stdin")
+		return r.processReader(os.Stdin, fn)
 	}
 
 	if strings.HasPrefix(fn, "http://") || strings.HasPrefix(fn, "https://") {
