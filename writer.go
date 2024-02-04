@@ -46,7 +46,7 @@ func (mw *multiWriter) ReadFrom(r io.Reader) (written int64, err error) {
 	var wg sync.WaitGroup
 	var errCnt uint32
 	var errLk sync.Mutex
-	var end bool
+	var end bool // protected by s
 	c := sync.NewCond(s.RLocker())
 	s.Lock()
 	defer s.Unlock()
@@ -100,6 +100,8 @@ func (mw *multiWriter) ReadFrom(r io.Reader) (written int64, err error) {
 			s.Lock()
 
 			if errCnt > 0 {
+				end = true
+				c.Broadcast()
 				return
 			}
 
