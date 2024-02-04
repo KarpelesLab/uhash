@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"hash"
 	"io"
+	"net/http"
 	"os"
 	"sort"
 	"strings"
@@ -45,6 +46,21 @@ func (r *runner) process(fn string) error {
 	if fn == "-" {
 		return r.processReader(os.Stdin, "stdin")
 	}
+
+	if strings.HasPrefix(fn, "http://") || strings.HasPrefix(fn, "https://") {
+		// get over http or https
+		resp, err := http.Get(fn)
+		if err != nil {
+			return err
+		}
+		defer resp.Body.Close()
+		if resp.StatusCode >= 300 {
+			return fmt.Errorf("Invalid http status: %s", resp.Status)
+		}
+
+		return r.processReader(resp.Body, fn)
+	}
+
 	f, err := os.Open(fn)
 	if err != nil {
 		return err
