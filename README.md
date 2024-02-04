@@ -8,6 +8,10 @@ Becomes
 
     echo 'hello world' | uhash -with sha256 -
 
+## Installing
+
+    go install github.com/KarpelesLab/uhash@latest
+
 ## Testing
 
     openssl enc -pbkdf2 -aes-256-ctr -nosalt -pass pass:yourseed < /dev/zero 2>/dev/null | head -c $[1024*1024*1024] | ./uhash -with sha256,sha512 -
