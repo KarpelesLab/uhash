@@ -12,7 +12,15 @@ Becomes
 
     go install github.com/KarpelesLab/uhash@latest
 
-## Supported hashing algorithms
+## Features
+
+* Read from stdin, a file or an url
+* A single read is enough for all the algorithms (useful if reading has a cost, for example if reading from a s3 bucket)
+* Calculation is performed in parallel using one goroutine per algorithm
+* Specify output format with `-format`, for example `-format json` for json output
+* Specify hashing algorithm you want to run, or do not specify anything to run all the available algos
+
+### Supported hashing algorithms
 
 ```
 $ ./uhash -list
