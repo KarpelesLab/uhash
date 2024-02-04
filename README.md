@@ -42,6 +42,8 @@ sha384: SHA384
 sha512: SHA512
 sha512-224: SHA512-224
 sha512-256: SHA512-256
+shake128: SHA3 SHAKE128
+shake256: SHA3 SHAKE256
 size: Number of bytes in stream
 whirlpool: ISO/IEC 10118-3:2004 Whirlpool
 ```
