@@ -1,4 +1,4 @@
-package main
+package gomw
 
 import (
 	"io"
@@ -10,7 +10,7 @@ type multiWriter struct {
 	w []io.Writer
 }
 
-func newMultiWriter[T io.Writer](w ...T) io.Writer {
+func New[T io.Writer](w ...T) io.Writer {
 	switch len(w) {
 	case 0:
 		return io.Discard

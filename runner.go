@@ -8,6 +8,8 @@ import (
 	"os"
 	"sort"
 	"strings"
+
+	"github.com/KarpelesLab/uhash/gomw"
 )
 
 type runner struct {
@@ -77,7 +79,7 @@ func (r *runner) processReader(in io.Reader, inName string) error {
 	for _, a := range r.algos {
 		w = append(w, a.factory())
 	}
-	mw := newMultiWriter(w...)
+	mw := gomw.New(w...)
 	_, err := io.Copy(mw, in)
 	if err != nil {
 		return err
