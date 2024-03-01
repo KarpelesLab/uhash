@@ -1,3 +1,5 @@
+[![GoDoc](https://godoc.org/github.com/KarpelesLab/uhash/gomw?status.svg)](https://godoc.org/github.com/KarpelesLab/uhash/gomw)
+
 # gomw
 
 MultiWriter that can use goroutines for parallelized writes.
